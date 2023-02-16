@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+  forward-headers-strategy: native
+
+application:
+  jwt:
+    secretKey: ${PRIVATE_KEY}
+    tokenPrefix: "Bearer "
+    tokenExpirationMinutes: 10
+
