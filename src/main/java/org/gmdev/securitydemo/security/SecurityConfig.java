@@ -1,6 +1,5 @@
 package org.gmdev.securitydemo.security;
 
-import org.gmdev.securitydemo.jwt.JwtTokenVerifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,15 +19,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final DaoAuthenticationProvider daoAuthenticationProvider;
-    private final JwtTokenVerifier jwtTokenVerifier;
+    private final JwtTokenVerifierFilter jwtTokenVerifierFilter;
 
     @Autowired
     public SecurityConfig(
             DaoAuthenticationProvider daoAuthenticationProvider,
-            JwtTokenVerifier jwtTokenVerifier) {
+            JwtTokenVerifierFilter jwtTokenVerifierFilter) {
 
         this.daoAuthenticationProvider = daoAuthenticationProvider;
-        this.jwtTokenVerifier = jwtTokenVerifier;
+        this.jwtTokenVerifierFilter = jwtTokenVerifierFilter;
     }
 
     private static final String[] AUTH_WHITELIST = {
@@ -54,7 +53,7 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and()
                 .authenticationProvider(daoAuthenticationProvider)
-                .addFilterBefore(jwtTokenVerifier, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenVerifierFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

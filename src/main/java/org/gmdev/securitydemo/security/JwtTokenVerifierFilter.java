@@ -1,4 +1,4 @@
-package org.gmdev.securitydemo.jwt;
+package org.gmdev.securitydemo.security;
 
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Claims;
@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.gmdev.securitydemo.jwt.JwtConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,12 +28,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
-public class JwtTokenVerifier extends OncePerRequestFilter {
+public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
 
-    public JwtTokenVerifier(JwtConfig jwtConfig, SecretKey secretKey) {
+    public JwtTokenVerifierFilter(JwtConfig jwtConfig, SecretKey secretKey) {
         this.jwtConfig = jwtConfig;
         this.secretKey = secretKey;
     }
