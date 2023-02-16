@@ -8,8 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
 public class AuthUsernamePasswordService {
@@ -27,9 +25,6 @@ public class AuthUsernamePasswordService {
     public String attemptAuthentication(AuthRequest authRequest) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-
-        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(jwtService.getTokenExpirationMinutes());
-        java.sql.Timestamp.valueOf(expirationDate);
 
         UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
         return jwtService.generateBearerToken(userDetails);

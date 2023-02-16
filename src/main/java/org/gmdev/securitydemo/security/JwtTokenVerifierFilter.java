@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -51,15 +51,22 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         String token = authorizationHeader.replace(jwtService.getTokenPrefix(), "");
 
         try {
-            String username = jwtService.extractUserName(token);
+            String username = jwtService.extractUsername(token);
             UserDetails userDetails = authUserDetailService.loadUserByUsername(username);
-            Collection<? extends GrantedAuthority> simpleGrantedAuthorities = userDetails.getAuthorities();
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
+            if (!jwtService.isTokenValid(token, userDetails)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Collection<? extends GrantedAuthority> simpleGrantedAuthorities = userDetails.getAuthorities();
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     username,
                     null,
                     simpleGrantedAuthorities
             );
+
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException e) {

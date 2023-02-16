@@ -35,10 +35,6 @@ public class JwtService {
         return tokenPrefix;
     }
 
-    public Integer getTokenExpirationMinutes() {
-        return tokenExpirationMinutes;
-    }
-
     public String getAuthorizationHeader() {
         return HttpHeaders.AUTHORIZATION;
     }
@@ -47,7 +43,24 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateBearerToken(UserDetails userDetails) {
+        String token = generateToken(userDetails);
+        return String.format("%s%s", BEARER, token);
+    }
+
+    public String extractUsername(String token) {
+        Claims claims = extractClaims(token);
+        return claims.getSubject();
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        if (userDetails == null) return false;
+
+        String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    private String generateToken(UserDetails userDetails) {
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(tokenExpirationMinutes);
         java.sql.Timestamp.valueOf(expirationDate);
 
@@ -60,23 +73,18 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateBearerToken(UserDetails userDetails) {
-        String token = generateToken(userDetails);
-        return String.format("%s%s", BEARER, token);
-    }
-
-    public String extractUserName(String token) {
-        Claims claims = extractAllClaims(token);
-        return claims.getSubject();
-    }
-
-    public Claims extractAllClaims(String token) {
+    private Claims extractClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(secretKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    private boolean isTokenExpired(String token) {
+        Claims claims = extractClaims(token);
+        return claims.getExpiration().before(new Date());
     }
 
 }
