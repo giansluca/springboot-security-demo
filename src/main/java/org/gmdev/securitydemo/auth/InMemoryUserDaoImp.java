@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static org.gmdev.securitydemo.security.UserRole.*;
+import static org.gmdev.securitydemo.auth.UserRole.*;
 
 @Repository("inMemoryUserDao")
 public class InMemoryUserDaoImp implements UserDao {

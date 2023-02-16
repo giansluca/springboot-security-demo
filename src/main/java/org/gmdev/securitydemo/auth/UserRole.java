@@ -1,12 +1,13 @@
-package org.gmdev.securitydemo.security;
+package org.gmdev.securitydemo.auth;
 
 import com.google.common.collect.Sets;
+import org.gmdev.securitydemo.auth.UserPermission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.gmdev.securitydemo.security.UserPermission.*;
+import static org.gmdev.securitydemo.auth.UserPermission.*;
 
 public enum UserRole {
 

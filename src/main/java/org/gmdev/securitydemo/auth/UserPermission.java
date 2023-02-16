@@ -1,4 +1,4 @@
-package org.gmdev.securitydemo.security;
+package org.gmdev.securitydemo.auth;
 
 public enum UserPermission {
     STUDENT_READ("student:read"),

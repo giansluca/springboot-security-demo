@@ -1,6 +1,6 @@
 package org.gmdev.securitydemo.security;
 
-import org.gmdev.securitydemo.auth.AuthUserService;
+import org.gmdev.securitydemo.auth.AuthUserDetailService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +22,11 @@ public class SecurityManager {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(
             @Qualifier(value = "bcryptPasswordEncoder") PasswordEncoder passwordEncoder,
-            AuthUserService authUserService) {
+            AuthUserDetailService authUserDetailService) {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(authUserService);
+        provider.setUserDetailsService(authUserDetailService);
         provider.setHideUserNotFoundExceptions(false);
         return provider;
     }

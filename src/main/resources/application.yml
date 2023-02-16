@@ -7,6 +7,5 @@ server:
 application:
   jwt:
     secretKey: ${PRIVATE_KEY}
-    tokenPrefix: "Bearer "
     tokenExpirationMinutes: 10
 

@@ -1,4 +1,4 @@
-package org.gmdev.securitydemo.model;
+package org.gmdev.securitydemo.api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

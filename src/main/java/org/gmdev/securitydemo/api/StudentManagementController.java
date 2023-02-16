@@ -1,7 +1,7 @@
 package org.gmdev.securitydemo.api;
 
 import lombok.extern.slf4j.Slf4j;
-import org.gmdev.securitydemo.model.Student;
+import org.gmdev.securitydemo.api.model.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
