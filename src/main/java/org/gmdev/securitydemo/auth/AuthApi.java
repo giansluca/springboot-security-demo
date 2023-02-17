@@ -28,7 +28,7 @@ public class AuthApi {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<?> login(@RequestBody @Valid AuthRequest authRequest) {
+    public ResponseEntity<Void> login(@RequestBody @Valid AuthRequest authRequest) {
         try {
             log.info(String.format("Attempt login with username: '%s' and password: '%s'",
                     authRequest.getUsername(), authRequest.getPassword()));
