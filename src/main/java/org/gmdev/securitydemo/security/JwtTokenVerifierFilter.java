@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,11 +55,6 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = authUserDetailService.loadUserByUsername(username);
 
-            if (!jwtService.isTokenValid(token, userDetails)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
             Collection<? extends GrantedAuthority> simpleGrantedAuthorities = userDetails.getAuthorities();
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     username,
@@ -69,7 +65,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (JwtException e) {
+        } catch (JwtException | AuthenticationException e) {
             log.error(String.format("Token: %s cannot be trusted", token));
         }
 

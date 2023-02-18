@@ -53,13 +53,6 @@ public class JwtService {
         return claims.getSubject();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        if (userDetails == null) return false;
-
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
-    }
-
     private String generateToken(UserDetails userDetails) {
         LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(tokenExpirationMinutes);
         java.sql.Timestamp.valueOf(expirationDate);
@@ -80,11 +73,6 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    private boolean isTokenExpired(String token) {
-        Claims claims = extractClaims(token);
-        return claims.getExpiration().before(new Date());
     }
 
 }
