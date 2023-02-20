@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.gmdev.securitydemo.auth.AuthUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,12 +35,9 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@Nullable HttpServletRequest request,
-                                    @Nullable HttpServletResponse response,
-                                    @Nullable FilterChain filterChain) throws ServletException, IOException {
-
-        if (filterChain == null) throw new IllegalStateException("filterChain cannot be null!");
-        if (request == null) throw new IllegalStateException("request cannot be null!");
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader(jwtService.getAuthorizationHeader());
         if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtService.getTokenPrefix())) {
@@ -71,5 +67,6 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 
 }
